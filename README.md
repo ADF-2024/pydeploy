@@ -56,10 +56,16 @@ Alternatively, you can use `pip` directly without Anaconda:
 ### Configuration
 
 1. **Start the Deploy tool for the first time. It will notice there is no config.yaml and ask
-    for your ftp/sftp credentials to create one. **:
+    for your ftp/sftp credentials to create one.**:
     Run the following command and follow the prompts to add a new connection:
     ```sh
     python deploy.py
+    ```
+
+    Alternatively, you can copy the `config.yaml.example` to `config.yaml` and create a target on your own. 
+    Note that you will need to encrypt the FTP password with base64 manually.
+    ```sh
+    cp config.yaml.example config.yaml
     ```
 
 ### Usage
