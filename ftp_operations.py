@@ -54,8 +54,6 @@ def delete_directory_ftp(ftp, directory):
         ftp.cwd(original_dir)
 
 def upload_ftp(ftp, local_path, remote_path):
-    ftp.cwd(remote_path)
-    
     for root, dirs, files in os.walk(local_path):
         for filename in files:
             local_file = os.path.join(root, filename)
@@ -70,14 +68,16 @@ def upload_ftp(ftp, local_path, remote_path):
             print(f"Uploaded: {remote_file}")
 
 def create_remote_directory_ftp(ftp, remote_dir):
-    current_dir = ''
-    for dir_name in remote_dir.split('/'):
-        if dir_name:
-            current_dir += '/' + dir_name
+    dirs = remote_dir.split('/')
+    path = ''
+    for dir in dirs:
+        if dir:
+            path += f'/{dir}'
             try:
-                ftp.cwd(current_dir)
+                ftp.cwd(path)
             except:
-                ftp.mkd(current_dir)
+                ftp.mkd(path)
+                ftp.cwd(path)
 
 def check_connection_ftp(ftp, remote_path):
     try:
