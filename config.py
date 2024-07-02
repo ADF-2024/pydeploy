@@ -1,11 +1,6 @@
 import os
 import yaml
 import base64
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-
-from encryption import encrypt_value, decrypt_value, derive_key
 
 CONFIG_FILE = 'config.yaml'
 
@@ -16,7 +11,6 @@ def load_config():
     else:
         config = {}
     
-    # Ensure 'targets' key exists
     if 'targets' not in config:
         config['targets'] = {}
     
@@ -27,7 +21,7 @@ def get_or_create_target(config):
         print("No targets found in the configuration.")
         print("Let's add a new connection.")
         add_connection()
-        config = load_config()  # Reload the config after adding a new connection
+        config = load_config()
     
     if len(config['targets']) == 1:
         return next(iter(config['targets']))
@@ -39,7 +33,6 @@ def get_or_create_target(config):
     else:
         print("No targets found. This shouldn't happen. Please check your configuration.")
         return None
-
 
 def save_config(config):
     with open(CONFIG_FILE, 'w') as file:
@@ -57,58 +50,29 @@ def add_connection():
 
     host = input("Enter host: ")
     username = input("Enter username: ")
-    
-    encryption_strategy = input("Choose encryption strategy (none/password/base64): ").lower()
-    if encryption_strategy not in ['none', 'password', 'base64']:
-        print("Invalid encryption strategy. Please enter 'none', 'password', or 'base64'.")
-        return
-
-    if conn_type == 'ftp':
-        password = input("Enter password: ")
-    else:  # sftp
-        use_password = input("Use password for SFTP? (y/n): ").lower() == 'y'
-
     remote_path = input("Enter remote path: ")
-    
-    # Get encryption password
-    encryption_password = input("Enter a password to encrypt sensitive data: ")
-    salt = os.urandom(16)
-    key = derive_key(encryption_password, salt)
 
     target_config = {
         'type': conn_type,
         'host': host,
         'username': username,
         'remote_path': remote_path,
-        'salt': base64.b64encode(salt).decode()
     }
 
-    target_config['encryption_strategy'] = encryption_strategy
-    target_config['encryption_strategy'] = encryption_strategy
-    if conn_type == 'ftp' or (conn_type == 'sftp' and use_password):
-        target_config['password'] = encrypted_password
-        if encryption_strategy == 'password':
-            target_config['salt'] = base64.b64encode(salt).decode()
-    else:
-        target_config['private_key'] = encrypted_private_key
-        if encryption_strategy == 'password':
-            target_config['salt'] = base64.b64encode(salt).decode()
-        target_config['password'] = encrypted_password
-        if encryption_strategy == 'password':
-            target_config['salt'] = base64.b64encode(salt).decode()
-    if conn_type == 'sftp' and not use_password:
-        target_config['private_key'] = encrypted_private_key
-        if encryption_strategy == 'password':
-            target_config['salt'] = base64.b64encode(salt).decode()
-        target_config['password'] = encrypted_password
-        if encryption_strategy == 'password':
-            target_config['salt'] = base64.b64encode(salt).decode()
-    elif conn_type == 'sftp' and not use_password:
-        target_config['private_key'] = encrypted_private_key
-        if encryption_strategy == 'password':
-            target_config['salt'] = base64.b64encode(salt).decode()
+    if conn_type == 'ftp':
+        password = input("Enter password: ")
+        target_config['password'] = base64.b64encode(password.encode()).decode()
+    else:  # sftp
+        use_password = input("Use password for SFTP? (y/n): ").lower() == 'y'
+        if use_password:
+            password = input("Enter password: ")
+            target_config['password'] = base64.b64encode(password.encode()).decode()
+        else:
+            private_key_path = input("Enter path to private key: ")
+            with open(private_key_path, 'r') as key_file:
+                private_key = key_file.read()
+            target_config['private_key'] = base64.b64encode(private_key.encode()).decode()
 
     config['targets'][target] = target_config
     save_config(config)
-    print(f"Connection for {target} has been added and encrypted.")
-
+    print(f"Connection for {target} has been added with base64 encoding.")
