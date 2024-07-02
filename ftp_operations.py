@@ -87,7 +87,13 @@ def create_remote_directory_ftp(ftp, remote_dir):
         if dir:
             path += f'/{dir}'
             if not directory_exists_ftp(ftp, path):
-                ftp.mkd(path)
+                try:
+                    ftp.mkd(path)
+                except ftplib.error_perm as e:
+                    if str(e).startswith('550'):
+                        print(f"Directory {path} already exists.")
+                    else:
+                        raise
 
 def check_connection_ftp(ftp, remote_path):
     try:
