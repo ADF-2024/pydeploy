@@ -86,4 +86,53 @@ def check_connection_ftp(ftp, remote_path):
         return True
     except Exception as e:
         print(f"Failed to connect or change directory: {str(e)}")
-        return False
+        return Falseimport paramiko
+
+def clean_sftp(sftp, remote_path, exclude_list):
+    print(f"Starting clean operation in {remote_path}")
+    for item in sftp.listdir(remote_path):
+        if item not in exclude_list and item not in ('.', '..'):
+            try:
+                sftp.remove(f"{remote_path}/{item}")
+                print(f"Deleted file: {item}")
+            except IOError:
+                delete_directory_sftp(sftp, f"{remote_path}/{item}")
+
+    print("SFTP clean operation completed.")
+
+def delete_directory_sftp(sftp, directory):
+    print(f"Attempting to delete directory: {directory}")
+    for item in sftp.listdir(directory):
+        if item not in ('.', '..'):
+            try:
+                sftp.remove(f"{directory}/{item}")
+                print(f"Deleted file in directory: {item}")
+            except IOError:
+                delete_directory_sftp(sftp, f"{directory}/{item}")
+    sftp.rmdir(directory)
+    print(f"Deleted directory: {directory}")
+
+def upload_sftp(sftp, local_path, remote_path):
+    for root, dirs, files in os.walk(local_path):
+        for filename in files:
+            local_file = os.path.join(root, filename)
+            relative_path = os.path.relpath(local_file, local_path)
+            remote_file = os.path.join(remote_path, relative_path).replace("\\", "/")
+            
+            remote_dir = os.path.dirname(remote_file)
+            create_remote_directory_sftp(sftp, remote_dir)
+            
+            sftp.put(local_file, remote_file)
+            print(f"Uploaded: {remote_file}")
+
+def create_remote_directory_sftp(sftp, remote_dir):
+    dirs = remote_dir.split('/')
+    path = ''
+    for dir in dirs:
+        if dir:
+            path += f'/{dir}'
+            try:
+                sftp.chdir(path)
+            except IOError:
+                sftp.mkdir(path)
+                sftp.chdir(path)
