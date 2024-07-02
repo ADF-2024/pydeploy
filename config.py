@@ -77,5 +77,6 @@ def add_connection():
             target_config['private_key'] = base64.b64encode(private_key.encode()).decode()
 
     config['targets'][target] = target_config
+    config['exclude_from_clean'] = ['.htaccess', '.htpasswd']
     save_config(config)
     print(f"Connection for {target} has been added with base64 encoding.")
