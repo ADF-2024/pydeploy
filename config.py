@@ -1,5 +1,9 @@
 import os
 import yaml
+import base64
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -61,7 +65,21 @@ def add_connection():
         print("Invalid encryption strategy. Please enter 'none', 'password', or 'base64'.")
         return
 
-    if conn_type == 'ftp' or (conn_type == 'sftp' and use_password):
+    if conn_type == 'ftp':
+        password = input("Enter password: ")
+    else:  # sftp
+        use_password = input("Use password for SFTP? (y/n): ").lower() == 'y'
+        if use_password:
+            password = input("Enter password: ")
+        else:
+            private_key_path = input("Enter path to private key: ")
+            with open(private_key_path, 'r') as key_file:
+                private_key = key_file.read()
+
+    encryption_strategy = input("Choose encryption strategy (none/password/base64): ").lower()
+    if encryption_strategy not in ['none', 'password', 'base64']:
+        print("Invalid encryption strategy. Please enter 'none', 'password', or 'base64'.")
+        return
         password = input("Enter password: ")
         if encryption_strategy == 'password':
             encryption_password = input("Enter a password to encrypt sensitive data: ")
@@ -102,7 +120,23 @@ def add_connection():
     }
 
     target_config['encryption_strategy'] = encryption_strategy
+    target_config['encryption_strategy'] = encryption_strategy
+    target_config['encryption_strategy'] = encryption_strategy
     if conn_type == 'ftp' or (conn_type == 'sftp' and use_password):
+        target_config['password'] = encrypted_password
+        if encryption_strategy == 'password':
+            target_config['salt'] = base64.b64encode(salt).decode()
+    else:
+        target_config['private_key'] = encrypted_private_key
+        if encryption_strategy == 'password':
+            target_config['salt'] = base64.b64encode(salt).decode()
+        target_config['password'] = encrypted_password
+        if encryption_strategy == 'password':
+            target_config['salt'] = base64.b64encode(salt).decode()
+    else:
+        target_config['private_key'] = encrypted_private_key
+        if encryption_strategy == 'password':
+            target_config['salt'] = base64.b64encode(salt).decode()
         target_config['password'] = encrypted_password
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()
