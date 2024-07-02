@@ -1,12 +1,6 @@
-import yaml
 import os
-import sys
-import base64
-import paramiko
-from ftplib import FTP
 
 from ftp_operations import connect_ftp, clean_ftp, upload_ftp, check_connection_ftp
-from config import load_config, get_or_create_target, save_config, add_connection
 from base_operations import deploy, clean, check_connection
 
 import sys

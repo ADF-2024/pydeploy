@@ -86,7 +86,7 @@ def check_connection_ftp(ftp, remote_path):
         return True
     except Exception as e:
         print(f"Failed to connect or change directory: {str(e)}")
-        return Falseimport paramiko
+        return False
 
 def clean_sftp(sftp, remote_path, exclude_list):
     print(f"Starting clean operation in {remote_path}")
