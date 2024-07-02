@@ -67,40 +67,6 @@ def add_connection():
         password = input("Enter password: ")
     else:  # sftp
         use_password = input("Use password for SFTP? (y/n): ").lower() == 'y'
-        if use_password:
-            password = input("Enter password: ")
-        else:
-            private_key_path = input("Enter path to private key: ")
-            with open(private_key_path, 'r') as key_file:
-                private_key = key_file.read()
-
-    encryption_strategy = input("Choose encryption strategy (none/password/base64): ").lower()
-    if encryption_strategy not in ['none', 'password', 'base64']:
-        print("Invalid encryption strategy. Please enter 'none', 'password', or 'base64'.")
-        return
-        password = input("Enter password: ")
-        if encryption_strategy == 'password':
-            encryption_password = input("Enter a password to encrypt sensitive data: ")
-            salt = os.urandom(16)
-            key = derive_key(encryption_password, salt)
-            encrypted_password = encrypt_value(password, key)
-        elif encryption_strategy == 'base64':
-            encrypted_password = base64.b64encode(password.encode()).decode()
-        else:
-            encrypted_password = password
-    else:
-        private_key_path = input("Enter path to private key: ")
-        with open(private_key_path, 'r') as key_file:
-            private_key = key_file.read()
-        if encryption_strategy == 'password':
-            encryption_password = input("Enter a password to encrypt sensitive data: ")
-            salt = os.urandom(16)
-            key = derive_key(encryption_password, salt)
-            encrypted_private_key = encrypt_value(private_key, key)
-        elif encryption_strategy == 'base64':
-            encrypted_private_key = base64.b64encode(private_key.encode()).decode()
-        else:
-            encrypted_private_key = private_key
 
     remote_path = input("Enter remote path: ")
     
