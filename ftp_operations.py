@@ -62,11 +62,23 @@ def upload_ftp(ftp, local_path, remote_path):
             remote_file = os.path.join(remote_path, relative_path).replace("\\", "/")
             
             remote_dir = os.path.dirname(remote_file)
-            create_remote_directory_ftp(ftp, remote_dir)
+            if not directory_exists_ftp(ftp, remote_dir):
+                create_remote_directory_ftp(ftp, remote_dir)
             
-            with open(local_file, 'rb') as file:
-                ftp.storbinary(f'STOR {remote_file}', file)
-            print(f"Uploaded: {remote_file}")
+            try:
+                with open(local_file, 'rb') as file:
+                    ftp.storbinary(f'STOR {remote_file}', file)
+                print(f"Uploaded: {remote_file}")
+            except Exception as e:
+                print(f"Failed to upload {local_file}: {str(e)}")
+
+def directory_exists_ftp(ftp, dir):
+    file_list = []
+    ftp.retrlines('LIST', file_list.append)
+    for f in file_list:
+        if dir in f.split()[-1]:
+            return True
+    return False
 
 def create_remote_directory_ftp(ftp, remote_dir):
     dirs = remote_dir.split('/')
@@ -74,11 +86,8 @@ def create_remote_directory_ftp(ftp, remote_dir):
     for dir in dirs:
         if dir:
             path += f'/{dir}'
-            try:
-                ftp.cwd(path)
-            except:
+            if not directory_exists_ftp(ftp, path):
                 ftp.mkd(path)
-                ftp.cwd(path)
 
 def check_connection_ftp(ftp, remote_path):
     try:
