@@ -5,9 +5,7 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from base_operations import derive_key
 
 CONFIG_FILE = 'config.yaml'
 
@@ -133,14 +131,14 @@ def add_connection():
         target_config['password'] = encrypted_password
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()
-    else:
+    elif conn_type == 'sftp' and not use_password:
         target_config['private_key'] = encrypted_private_key
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()
         target_config['password'] = encrypted_password
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()
-    else:
+    elif conn_type == 'sftp' and not use_password:
         target_config['private_key'] = encrypted_private_key
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()

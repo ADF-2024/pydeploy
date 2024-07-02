@@ -41,21 +41,25 @@ def check_connection(target=None):
 
     target_config = config['targets'][target]
     
-    # Get decryption password
-    decryption_password = input("Enter the password to decrypt sensitive data: ")
-    salt = base64.b64decode(target_config['salt'])
-    key = derive_key(decryption_password, salt)
-
-    # Decrypt sensitive data
-    if 'password' in target_config:
-        if 'salt' in target_config:
+    encryption_strategy = target_config.get('encryption_strategy', 'none')
+    if encryption_strategy == 'password':
+        decryption_password = input("Enter the password to decrypt sensitive data: ")
+        salt = base64.b64decode(target_config['salt'])
+        key = derive_key(decryption_password, salt)
+        if 'password' in target_config:
             password = decrypt_value(target_config['password'], key)
-        elif len(target_config['password']) % 4 == 0 and re.match('^[A-Za-z0-9+/]*={0,2}$', target_config['password']):
+        elif 'private_key' in target_config:
+            private_key = decrypt_value(target_config['private_key'], key)
+    elif encryption_strategy == 'base64':
+        if 'password' in target_config:
             password = base64.b64decode(target_config['password']).decode()
-        else:
+        elif 'private_key' in target_config:
+            private_key = base64.b64decode(target_config['private_key']).decode()
+    else:
+        if 'password' in target_config:
             password = target_config['password']
-    elif 'private_key' in target_config:
-        private_key = decrypt_value(target_config['private_key'], key)
+        elif 'private_key' in target_config:
+            private_key = target_config['private_key']
 
     print(f"Checking connection to {target}...")
 
@@ -94,16 +98,25 @@ def clean(target):
 
     target_config = config['targets'][target]
     
-    # Get decryption password
-    decryption_password = input("Enter the password to decrypt sensitive data: ")
-    salt = base64.b64decode(target_config['salt'])
-    key = derive_key(decryption_password, salt)
-
-    # Decrypt sensitive data
-    if 'password' in target_config:
-        password = decrypt_value(target_config['password'], key)
-    elif 'private_key' in target_config:
-        private_key = decrypt_value(target_config['private_key'], key)
+    encryption_strategy = target_config.get('encryption_strategy', 'none')
+    if encryption_strategy == 'password':
+        decryption_password = input("Enter the password to decrypt sensitive data: ")
+        salt = base64.b64decode(target_config['salt'])
+        key = derive_key(decryption_password, salt)
+        if 'password' in target_config:
+            password = decrypt_value(target_config['password'], key)
+        elif 'private_key' in target_config:
+            private_key = decrypt_value(target_config['private_key'], key)
+    elif encryption_strategy == 'base64':
+        if 'password' in target_config:
+            password = base64.b64decode(target_config['password']).decode()
+        elif 'private_key' in target_config:
+            private_key = base64.b64decode(target_config['private_key']).decode()
+    else:
+        if 'password' in target_config:
+            password = target_config['password']
+        elif 'private_key' in target_config:
+            private_key = target_config['private_key']
 
     print(f"Cleaning {target}...")
 
@@ -130,16 +143,25 @@ def deploy(target=None):
 
     target_config = config['targets'][target]
     
-    # Get decryption password
-    decryption_password = input("Enter the password to decrypt sensitive data: ")
-    salt = base64.b64decode(target_config['salt'])
-    key = derive_key(decryption_password, salt)
-
-    # Decrypt sensitive data
-    if 'password' in target_config:
-        password = decrypt_value(target_config['password'], key)
-    elif 'private_key' in target_config:
-        private_key = decrypt_value(target_config['private_key'], key)
+    encryption_strategy = target_config.get('encryption_strategy', 'none')
+    if encryption_strategy == 'password':
+        decryption_password = input("Enter the password to decrypt sensitive data: ")
+        salt = base64.b64decode(target_config['salt'])
+        key = derive_key(decryption_password, salt)
+        if 'password' in target_config:
+            password = decrypt_value(target_config['password'], key)
+        elif 'private_key' in target_config:
+            private_key = decrypt_value(target_config['private_key'], key)
+    elif encryption_strategy == 'base64':
+        if 'password' in target_config:
+            password = base64.b64decode(target_config['password']).decode()
+        elif 'private_key' in target_config:
+            private_key = base64.b64decode(target_config['private_key']).decode()
+    else:
+        if 'password' in target_config:
+            password = target_config['password']
+        elif 'private_key' in target_config:
+            private_key = target_config['private_key']
 
     print(f"Deploying to {target}...")
 
