@@ -85,12 +85,11 @@ def add_connection():
 
     target_config['encryption_strategy'] = encryption_strategy
     target_config['encryption_strategy'] = encryption_strategy
-    target_config['encryption_strategy'] = encryption_strategy
     if conn_type == 'ftp' or (conn_type == 'sftp' and use_password):
         target_config['password'] = encrypted_password
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()
-    elif conn_type == 'sftp' and not use_password:
+    else:
         target_config['private_key'] = encrypted_private_key
         if encryption_strategy == 'password':
             target_config['salt'] = base64.b64encode(salt).decode()
