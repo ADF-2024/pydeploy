@@ -48,7 +48,12 @@ def check_connection(target=None):
 
     # Decrypt sensitive data
     if 'password' in target_config:
-        password = decrypt_value(target_config['password'], key)
+        if 'salt' in target_config:
+            password = decrypt_value(target_config['password'], key)
+        elif len(target_config['password']) % 4 == 0 and re.match('^[A-Za-z0-9+/]*={0,2}$', target_config['password']):
+            password = base64.b64decode(target_config['password']).decode()
+        else:
+            password = target_config['password']
     elif 'private_key' in target_config:
         private_key = decrypt_value(target_config['private_key'], key)
 
