@@ -107,18 +107,6 @@ def clean(target):
             ftp = connect_ftp(target_config['host'], target_config['username'], password)
             clean_ftp(ftp, target_config['remote_path'], config.get('exclude_from_clean', []))
             ftp.quit()
-        elif target_config['type'] == 'sftp':
-            ssh = paramiko.SSHClient()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            if 'password' in target_config:
-                ssh.connect(target_config['host'], username=target_config['username'], password=password)
-            else:
-                private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key))
-                ssh.connect(target_config['host'], username=target_config['username'], pkey=private_key)
-            
-            with ssh.open_sftp() as sftp:
-                clean_sftp(sftp, target_config['remote_path'], config.get('exclude_from_clean', []))
-            ssh.close()
         print(f"Cleaning of {target} completed successfully.")
     except Exception as e:
         print(f"Cleaning of {target} failed: {str(e)}")
@@ -158,20 +146,6 @@ def deploy(target=None):
                     clean_ftp(ftp, target_config['remote_path'], config.get('exclude_from_clean', []))
                 upload_ftp(ftp, config['local_path'], target_config['remote_path'])
                 ftp.quit()
-        elif target_config['type'] == 'sftp':
-            ssh = paramiko.SSHClient()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            if 'password' in target_config:
-                ssh.connect(target_config['host'], username=target_config['username'], password=password)
-            else:
-                private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key))
-                ssh.connect(target_config['host'], username=target_config['username'], pkey=private_key)
-            
-            with ssh.open_sftp() as sftp:
-                if config.get('clean_before_deploy', False):
-                    clean_sftp(sftp, target_config['remote_path'], config.get('exclude_from_clean', []))
-                upload_sftp(sftp, config['local_path'], target_config['remote_path'])
-            ssh.close()
         print(f"Deployment to {target} completed successfully.")
     except Exception as e:
         print(f"Deployment to {target} failed: {str(e)}")
