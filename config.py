@@ -56,16 +56,35 @@ def add_connection():
     host = input("Enter host: ")
     username = input("Enter username: ")
     
-    if conn_type == 'ftp':
+    encryption_strategy = input("Choose encryption strategy (none/password/base64): ").lower()
+    if encryption_strategy not in ['none', 'password', 'base64']:
+        print("Invalid encryption strategy. Please enter 'none', 'password', or 'base64'.")
+        return
+
+    if conn_type == 'ftp' or (conn_type == 'sftp' and use_password):
         password = input("Enter password: ")
-    else:  # sftp
-        use_password = input("Use password for SFTP? (y/n): ").lower() == 'y'
-        if use_password:
-            password = input("Enter password: ")
+        if encryption_strategy == 'password':
+            encryption_password = input("Enter a password to encrypt sensitive data: ")
+            salt = os.urandom(16)
+            key = derive_key(encryption_password, salt)
+            encrypted_password = encrypt_value(password, key)
+        elif encryption_strategy == 'base64':
+            encrypted_password = base64.b64encode(password.encode()).decode()
         else:
-            private_key_path = input("Enter path to private key: ")
-            with open(private_key_path, 'r') as key_file:
-                private_key = key_file.read()
+            encrypted_password = password
+    else:
+        private_key_path = input("Enter path to private key: ")
+        with open(private_key_path, 'r') as key_file:
+            private_key = key_file.read()
+        if encryption_strategy == 'password':
+            encryption_password = input("Enter a password to encrypt sensitive data: ")
+            salt = os.urandom(16)
+            key = derive_key(encryption_password, salt)
+            encrypted_private_key = encrypt_value(private_key, key)
+        elif encryption_strategy == 'base64':
+            encrypted_private_key = base64.b64encode(private_key.encode()).decode()
+        else:
+            encrypted_private_key = private_key
 
     remote_path = input("Enter remote path: ")
     
@@ -82,10 +101,15 @@ def add_connection():
         'salt': base64.b64encode(salt).decode()
     }
 
+    target_config['encryption_strategy'] = encryption_strategy
     if conn_type == 'ftp' or (conn_type == 'sftp' and use_password):
-        target_config['password'] = encrypt_value(password, key)
+        target_config['password'] = encrypted_password
+        if encryption_strategy == 'password':
+            target_config['salt'] = base64.b64encode(salt).decode()
     else:
-        target_config['private_key'] = encrypt_value(private_key, key)
+        target_config['private_key'] = encrypted_private_key
+        if encryption_strategy == 'password':
+            target_config['salt'] = base64.b64encode(salt).decode()
 
     config['targets'][target] = target_config
     save_config(config)
