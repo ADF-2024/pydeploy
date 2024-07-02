@@ -52,7 +52,7 @@ def add_connection():
     username = input("Enter username: ")
     remote_path = input("Enter remote path (default: /): ") or '/'
 
-    local_path = input("Enter local path: ")
+    local_path = input("Enter local path (default: ../dist): ") or '../dist'
 
     target_config = {
         'local_path': local_path,
