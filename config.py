@@ -50,9 +50,12 @@ def add_connection():
 
     host = input("Enter host: ")
     username = input("Enter username: ")
-    remote_path = input("Enter remote path: ")
+    remote_path = input("Enter remote path (default: /): ") or '/'
+
+    local_path = input("Enter local path: ")
 
     target_config = {
+        'local_path': local_path,
         'type': conn_type,
         'host': host,
         'username': username,
