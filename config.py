@@ -7,14 +7,6 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 CONFIG_FILE = 'config.yaml'
 
-def encrypt_value(value, key):
-    f = Fernet(key)
-    return f.encrypt(value.encode()).decode()
-
-def decrypt_value(encrypted_value, key):
-    f = Fernet(key)
-    return f.decrypt(encrypted_value.encode()).decode()
-
 def load_config():
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as file:

@@ -1,0 +1,11 @@
+exclude_from_clean:
+- .htaccess
+- .htpasswd
+- wp-config.php
+- uploads/
+- cache/
+local_path: ../testupload
+remote_path: /var/www/html/
+exclude_from_clean:
+      - .htaccess
+      - .htpasswd
