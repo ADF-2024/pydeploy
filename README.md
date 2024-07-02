@@ -18,6 +18,24 @@ This project is a deployment automation tool designed to simplify the process of
 
 ### Installation
 
+We recommend using [Anaconda](https://www.anaconda.com/products/distribution) to manage your Python environment. Anaconda simplifies package management and deployment.
+
+1. **Install Anaconda**:
+    Follow the instructions on the [Anaconda website](https://docs.anaconda.com/anaconda/install/) to download and install Anaconda.
+
+2. **Create a new environment**:
+    ```sh
+    conda create --name deploy-env python=3.8
+    conda activate deploy-env
+    ```
+
+3. **Install the required packages**:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+Alternatively, you can use `pip` directly without Anaconda:
+
 1. **Clone the repository**:
     ```sh
     git clone https://github.com/yourusername/deployment-automation-tool.git
