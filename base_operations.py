@@ -5,27 +5,12 @@ import io
 from ftplib import FTP
 from ftp_operations import connect_ftp, clean_ftp, upload_ftp, check_connection_ftp
 from config import load_config, get_or_create_target, save_config, add_connection
+from encryption import encrypt_value, decrypt_value, derive_key
 
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-def encrypt_value(value, key):
-    f = Fernet(key)
-    return f.encrypt(value.encode()).decode()
-
-def decrypt_value(encrypted_value, key):
-    f = Fernet(key)
-    return f.decrypt(encrypted_value.encode()).decode()
-
-def derive_key(password, salt):
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-    )
-    return base64.urlsafe_b64encode(kdf.derive(password.encode()))
 
 def check_connection(target=None):
     config = load_config()
