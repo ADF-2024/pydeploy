@@ -1,11 +1,18 @@
 exclude_from_clean:
 - .htaccess
 - .htpasswd
-- wp-config.php
-- uploads/
-- cache/
-local_path: ../testupload
-remote_path: /var/www/html/
-exclude_from_clean:
-      - .htaccess
-      - .htpasswd
+targets:
+  dev:
+    host: myserver.com
+    local_path: ../testupload
+    password: needs to be added by the deploy.py because of base64 encryption
+    remote_path: /
+    type: ftp
+    username: abcdefg12345
+  prod:
+    host: myserver.com
+    local_path: ../testupload
+    password: needs to be added by the deploy.py because of base64 encryption
+    remote_path: /www/htdocs/user/my-site.com
+    type: sftp
+    username: enter username here

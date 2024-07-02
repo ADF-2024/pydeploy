@@ -38,8 +38,8 @@ Alternatively, you can use `pip` directly without Anaconda:
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/yourusername/deployment-automation-tool.git
-    cd deployment-automation-tool
+    git clone https://github.com/ADF-2024/pydeploy.git
+    cd pydeploy
     ```
 
 2. **Create a virtual environment** (optional but recommended):

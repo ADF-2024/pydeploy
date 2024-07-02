@@ -2,6 +2,7 @@ import os
 
 from ftp_operations import connect_ftp, clean_ftp, upload_ftp, check_connection_ftp
 from base_operations import deploy, clean, check_connection
+from config import add_connection
 
 import sys
 
