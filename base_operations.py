@@ -3,7 +3,7 @@ import paramiko
 import io
 
 from ftplib import FTP
-from ftp_operations import connect_ftp, clean_ftp, upload_ftp, check_connection_ftp
+from ftp_operations import connect_ftp, clean_ftp, upload_ftp, check_connection_ftp, clean_sftp, upload_sftp
 from config import load_config, get_or_create_target, save_config, add_connection
 from encryption import encrypt_value, decrypt_value, derive_key
 
