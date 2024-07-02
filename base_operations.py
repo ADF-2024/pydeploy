@@ -26,6 +26,12 @@ def check_connection(target=None):
 
     target_config = config['targets'][target]
     
+    if 'local_path' not in config:
+        print("Error: 'local_path' not found in configuration.")
+        return
+
+    local_path = config['local_path']
+
     if 'password' in target_config:
         password = base64.b64decode(target_config['password']).decode()
     elif 'private_key' in target_config:
