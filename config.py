@@ -21,7 +21,7 @@ def get_or_create_target(config):
         print("No targets found in the configuration.")
         print("Let's add a new connection.")
         add_connection()
-        config = load_config()
+        return None
     
     if len(config['targets']) == 1:
         return next(iter(config['targets']))
