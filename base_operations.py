@@ -26,11 +26,11 @@ def check_connection(target=None):
 
     target_config = config['targets'][target]
     
-    if 'local_path' not in config:
+    if 'local_path' not in target_config:
         print("Error: 'local_path' not found in configuration.")
         return
 
-    local_path = config['local_path']
+    local_path = target_config['local_path']
 
     if 'password' in target_config:
         password = base64.b64decode(target_config['password']).decode()
@@ -117,7 +117,7 @@ def deploy(target=None):
             if check_connection_ftp(ftp, target_config['remote_path']):
                 if config.get('clean_before_deploy', False):
                     clean_ftp(ftp, target_config['remote_path'], config.get('exclude_from_clean', []))
-                upload_ftp(ftp, config['local_path'], target_config['remote_path'])
+                upload_ftp(ftp, target_config['local_path'], target_config['remote_path'])
                 ftp.quit()
         print(f"Deployment to {target} completed successfully.")
     except Exception as e:
