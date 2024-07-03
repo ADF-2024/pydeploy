@@ -2,7 +2,7 @@ import os
 import yaml
 import base64
 
-CONFIG_FILE = 'config.yaml'
+CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'config.yaml')
 
 def load_config():
     if os.path.exists(CONFIG_FILE):
@@ -54,7 +54,9 @@ def add_connection():
 
     local_path = input("Enter local path (default: ../dist): ") or '../dist'
 
+    base_dir = os.path.dirname(__file__)
     target_config = {
+        'local_path': os.path.relpath(local_path, base_dir),
         'local_path': local_path,
         'type': conn_type,
         'host': host,
