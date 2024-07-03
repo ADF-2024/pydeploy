@@ -127,6 +127,13 @@ def deploy(target=None):
         return
 
     target_config = config['targets'][target]
+
+    if 'local_path' not in target_config:
+        print("Error: 'local_path' not found in configuration.")
+        return
+
+    local_path = os.path.join(os.path.dirname(__file__), target_config['local_path'])
+    print(f"Evaluated local path: {local_path}")
     
     if 'password' in target_config:
         password = base64.b64decode(target_config['password']).decode()
