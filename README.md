@@ -53,6 +53,27 @@ Alternatively, you can use `pip` directly without Anaconda:
     pip install -r requirements.txt
     ```
 
+### Using as a Submodule
+
+If you are using this deployment tool as a submodule in another project (e.g., a Node.js project), follow these steps:
+
+1. **Initialize the submodule**:
+    ```sh
+    git submodule add https://github.com/ADF-2024/pydeploy.git deploy-tool
+    git submodule update --init --recursive
+    ```
+
+2. **Add deployment scripts to `package.json`**:
+    Update your `package.json` to include scripts for deployment. For example:
+    ```json
+    {
+      "scripts": {
+        "deploy:dev": "python deploy-tool/deploy.py",
+        "upload:dev": "python deploy-tool/deploy.py <target>"
+      }
+    }
+    ```
+
 ### Configuration
 
 1. **Start the Deploy tool for the first time. It will notice there is no config.yaml and ask
