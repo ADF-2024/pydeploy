@@ -79,6 +79,13 @@ def clean(target):
 
     target_config = config['targets'][target]
     
+    local_path = os.path.join(os.path.dirname(__file__), target_config['local_path'])
+    print(f"Evaluated local path: {local_path}")
+
+    if not os.path.exists(local_path):
+        print(f"Error: Local path {local_path} does not exist.")
+        return
+
     if 'password' in target_config:
         password = base64.b64decode(target_config['password']).decode()
     elif 'private_key' in target_config:
