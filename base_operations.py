@@ -30,7 +30,7 @@ def check_connection(target=None):
         print("Error: 'local_path' not found in configuration.")
         return
 
-    local_path = target_config['local_path']
+    local_path = os.path.join(os.path.dirname(__file__), target_config['local_path'])
 
     if 'password' in target_config:
         password = base64.b64decode(target_config['password']).decode()
