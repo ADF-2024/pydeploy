@@ -148,7 +148,7 @@ def deploy(target=None):
             if check_connection_ftp(ftp, target_config['remote_path']):
                 if config.get('clean_before_deploy', False):
                     clean_ftp(ftp, target_config['remote_path'], config.get('exclude_from_clean', []))
-                upload_ftp(ftp, target_config['local_path'], target_config['remote_path'])
+                upload_ftp(ftp, local_path, target_config['remote_path'])
                 ftp.quit()
         elif target_config['type'] == 'sftp':
             ssh = paramiko.SSHClient()
