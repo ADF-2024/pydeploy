@@ -68,7 +68,7 @@ If you are using this deployment tool as a submodule in another project (e.g., a
     ```json
     {
       "scripts": {
-        "deploy:dev": "python deploy-tool/deploy.py",
+        "deploy:dev": "python deploy-tool/deploy.py <target>",
         "upload:dev": "python deploy-tool/deploy.py <target>"
       }
     }

@@ -38,10 +38,10 @@ def check_connection(target=None):
     if not os.path.exists(local_path):
         print(f"Error: Local path {local_path} does not exist.")
         return
-        password = base64.b64decode(target_config['password']).decode()
-    elif 'private_key' in target_config:
-        private_key = base64.b64decode(target_config['private_key']).decode()
-    elif 'private_key' in target_config:
+    
+    password = base64.b64decode(target_config['password']).decode()
+    
+    if 'private_key' in target_config:
         private_key = base64.b64decode(target_config['private_key']).decode()
 
     print(f"Checking connection to {target}...")

@@ -8,14 +8,14 @@ import sys
 
 def print_usage():
     print("Usage:")
-    print("  py deploy.py                       - Deploy using default target")
-    print("  py deploy.py <target>              - Deploy to specific target")
-    print("  py deploy.py add                   - Add a new connection")
-    print("  py deploy.py --check [<target>]    - Check connection (optional: specific target)")
-    print("  py deploy.py --clean <target>      - Clean target")
-    print("  py deploy.py <target> --clean      - Clean specific target")
-    print("  py deploy.py <target> --check      - Check connection for specific target")
-    print("  py deploy.py --help                - Show this help message")
+    print("  python deploy.py                       - Deploy using default target")
+    print("  python deploy.py <target>              - Deploy to specific target")
+    print("  python deploy.py add                   - Add a new connection")
+    print("  python deploy.py --check [<target>]    - Check connection (optional: specific target)")
+    print("  python deploy.py --clean <target>      - Clean target")
+    print("  python deploy.py <target> --clean      - Clean specific target")
+    print("  python deploy.py <target> --check      - Check connection for specific target")
+    print("  python deploy.py --help                - Show this help message")
 
 def main():
     if len(sys.argv) == 1:
