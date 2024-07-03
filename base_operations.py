@@ -41,12 +41,18 @@ def check_connection(target=None):
         password = base64.b64decode(target_config['password']).decode()
     elif 'private_key' in target_config:
         private_key = base64.b64decode(target_config['private_key']).decode()
+    elif 'private_key' in target_config:
+        private_key = base64.b64decode(target_config['private_key']).decode()
 
     print(f"Checking connection to {target}...")
 
     try:
         if target_config['type'] == 'ftp':
-            ftp = connect_ftp(target_config['host'], target_config['username'], password)
+            if 'password' in target_config:
+                ftp = connect_ftp(target_config['host'], target_config['username'], password)
+            else:
+                print("Error: 'password' not found in configuration for FTP connection.")
+                return
             if check_connection_ftp(ftp, target_config['remote_path']):
                 print(f"FTP connection to {target} successful!")
                 print(f"Changed to remote directory: {target_config['remote_path']}")
