@@ -1,4 +1,5 @@
 import base64
+import os
 import paramiko
 import io
 
