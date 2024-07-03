@@ -162,7 +162,7 @@ def deploy(target=None):
             with ssh.open_sftp() as sftp:
                 if config.get('clean_before_deploy', False):
                     clean_sftp(sftp, target_config['remote_path'], config.get('exclude_from_clean', []))
-                upload_sftp(sftp, target_config['local_path'], target_config['remote_path'])
+                upload_sftp(sftp, local_path, target_config['remote_path'])
             ssh.close()
         print(f"Deployment to {target} completed successfully.")
     except Exception as e:
