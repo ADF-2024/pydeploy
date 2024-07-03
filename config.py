@@ -22,9 +22,17 @@ def get_or_create_target(config):
         print("Let's add a new connection.")
         add_connection()
         return None
+    else:
+        target = next(iter(config['targets']))
+        local_path = os.path.join(os.path.dirname(__file__), config['targets'][target]['local_path'])
+        print(f"Evaluated local path: {local_path}")
+        return target
     
     if len(config['targets']) == 1:
-        return next(iter(config['targets']))
+        target = next(iter(config['targets']))
+        local_path = os.path.join(os.path.dirname(__file__), config['targets'][target]['local_path'])
+        print(f"Evaluated local path: {local_path}")
+        return target
     elif len(config['targets']) > 1:
         print("Multiple targets found. Please specify a target.")
         for target in config['targets']:
