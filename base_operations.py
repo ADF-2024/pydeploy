@@ -35,9 +35,6 @@ def check_connection(target=None):
 
     print(f"Evaluated local path: {local_path}")
 
-    local_path = os.path.join(os.path.dirname(__file__), target_config['local_path'])
-    print(f"Evaluated local path: {local_path}")
-
     if not os.path.exists(local_path):
         print(f"Error: Local path {local_path} does not exist.")
         return
